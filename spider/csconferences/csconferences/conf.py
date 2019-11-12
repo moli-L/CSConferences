@@ -12,6 +12,3 @@ class Conf(object):
         self.conf_json[key.upper()] = value
         with open("csconferences/conf.json", "w") as f:
             f.write(json.dumps(self.conf_json))
-
-conf = Conf()
-print(conf.readValue('index'))
