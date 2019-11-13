@@ -10,5 +10,13 @@ class Conf(object):
 
     def writeValue(self, key, value):
         self.conf_json[key.upper()] = value
-        with open("csconferences/conf.json", "w") as f:
+        with open("csconferences/conf.json", "w+") as f:
             f.write(json.dumps(self.conf_json))
+
+    def addErrorIndex(self, index):
+        self.conf_json['ERROR_INDEX'].append(index)
+        with open("csconferences/conf.json", "w+") as f:
+            f.write(json.dumps(self.conf_json))
+    
+    def getErrorIndexList(self):
+        return self.conf_json['ERROR_INDEX']
