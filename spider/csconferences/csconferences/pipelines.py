@@ -43,6 +43,7 @@ class ConferencePipeline(object):
         try:
             self.cursor.execute(sql, value)
             self.conn.commit()
+            spider.successDB()
         except Exception as e:
             print("【DB ERROR】", str(e))
             self.conn.rollback()

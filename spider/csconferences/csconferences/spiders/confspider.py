@@ -12,9 +12,23 @@ class ConfSpider(scrapy.Spider):
     def start_requests(self):
         self.conf = Conf()
         self.index = self.conf.readValue('index')
-        yield scrapy.Request(self.base_url+str(self.index))
+        self.limit = self.conf.readValue('limit')
+        self.s_num = 0
+        self.f_num = 0
+        # yield scrapy.Request(self.base_url+str(self.index))
+        while(self.index <= self.limit):
+            yield scrapy.Request(self.base_url+str(self.index))
+            self.index += 1
 
     def parse(self, response):
+        # if(self.index > self.conf.readValue('limit')):
+        #     print("【OVER LIMIT】spider close")
+        #     return
+        
+        # self.index += 1
+        # next_url = self.base_url+str(self.index)
+        # yield scrapy.Request(next_url)
+
         def handleStr(s, default=None):
             return default if s==None or isEmptyStr(s) else s.strip()
 
@@ -26,12 +40,10 @@ class ConfSpider(scrapy.Spider):
 
         def filterstr(s):
             return s == 'CCF' or s == 'CORE' or s == 'QUALIS'
-
+        
         if(response.status == 404 or response.status == 500):
+            self.f_num += 1
             print("[INDEX: %s] response (%s)" % (self.index, response.status))
-            if(self.index > self.conf.readValue('limit')):
-                print("【OVER LIMIT】spider close")
-                return
         else:
             item = ConferenceItem()
             page = response.xpath('//*[@id="yw0"]/div[2]/div')
@@ -61,12 +73,13 @@ class ConfSpider(scrapy.Spider):
                         item['rank_QUALIS'] = page.xpath('.//div[@class="hidden-phone"]/span[%s]/text()' % (i+1)).get()
             yield item
 
-        self.index = self.index + 1
-        next_url = self.base_url+str(self.index)
-        yield scrapy.Request(next_url)
-
     def savaIndex(self):
+        print('【Finish】request Success:%s  Fail:%s' %  (self.s_num, self.f_num))
         self.conf.writeValue('index', self.index)
 
     def errorIndex(self):
+        self.f_num += 1
         self.conf.addErrorIndex(self.index)
+
+    def successDB(self):
+        self.s_num += 1
