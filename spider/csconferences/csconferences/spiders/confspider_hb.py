@@ -4,37 +4,29 @@ from csconferences.conf import Conf
 
 
 class ConfSpider(scrapy.Spider):
-    name = 'conferences'
+    name = 'conference_hb'
     handle_httpstatus_list = [404, 500] 
     base_url = 'https://www.myhuiban.com/conference/'
     allowed_domains = ["myhuiban.com"]
 
     def start_requests(self):
         self.conf = Conf()
-        self.index = self.conf.readValue('index')
-        self.limit = self.conf.readValue('limit')
+        self.index = self.conf.readValue('index_hb')
+        self.limit = self.conf.readValue('limit_hb')
         self.s_num = 0
         self.f_num = 0
-        # yield scrapy.Request(self.base_url+str(self.index))
         while(self.index <= self.limit):
             yield scrapy.Request(self.base_url+str(self.index))
             self.index += 1
 
     def parse(self, response):
-        # if(self.index > self.conf.readValue('limit')):
-        #     print("【OVER LIMIT】spider close")
-        #     return
-        
-        # self.index += 1
-        # next_url = self.base_url+str(self.index)
-        # yield scrapy.Request(next_url)
-
         def handleStr(s, default=None):
             return default if s==None or isEmptyStr(s) else s.strip()
 
         def isEmptyStr(s):
             return s=='' or s.strip()==''
 
+        # 去掉空格和最后一个字符
         def mapstr(s):
             return s.strip()[:-1]
 
@@ -43,7 +35,7 @@ class ConfSpider(scrapy.Spider):
         
         if(response.status == 404 or response.status == 500):
             self.f_num += 1
-            print("[INDEX: %s] response (%s)" % (self.index, response.status))
+            print("(INDEX: %s) response (%s)" % (self.index, response.status))
         else:
             item = ConferenceItem()
             page = response.xpath('//*[@id="yw0"]/div[2]/div')
@@ -62,8 +54,7 @@ class ConfSpider(scrapy.Spider):
             tags = response.xpath('//*[@id="yw0"]/div[2]/div/div[1]/span')
             # 如果有评级
             if(len(tags) > 3):
-                labels = list(map(mapstr, response.xpath('//*[@id="yw0"]/div[2]/div/div[1]/text()').getall()))
-                labs = list(filter(filterstr, labels))
+                labs = list(filter(filterstr, map(mapstr, response.xpath('//*[@id="yw0"]/div[2]/div/div[1]/text()').getall())))
                 for i, val in enumerate(labs):
                     if(val == 'CCF'):
                         item['rank_CCF'] = page.xpath('.//div[@class="hidden-phone"]/span[%s]/text()' % (i+1)).get()
@@ -77,9 +68,9 @@ class ConfSpider(scrapy.Spider):
         print('【Finish】request Success:%s  Fail:%s' %  (self.s_num, self.f_num))
         self.conf.writeValue('index', self.index)
 
-    def errorIndex(self):
+    def errorIndex(self, index='unknow'):
         self.f_num += 1
-        self.conf.addErrorIndex(self.index)
+        self.conf.addErrorIndex("error_index_hb", index)
 
     def successDB(self):
         self.s_num += 1

@@ -17,13 +17,17 @@ class ConferencePipeline(object):
             user=settings.MYSQL_USER,
             passwd=settings.MYSQL_PASSWD,
             db=settings.MYSQL_DBNAME,
-            charset='utf8'
         )
         self.cursor = self.conn.cursor()
 
     def process_item(self, item, spider):
-        sql = '''insert into t_conference(name,abbr,description,s_date,e_date,paper_date,noti_date,year,address,website,organization,rank_CCF,rank_CORE,rank_QUALIS) 
-                value( %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'''
+        if(spider.name == 'conference_hb'):
+            sql = '''insert into t_conference_hb(name,abbr,description,s_date,e_date,paper_date,noti_date,year,address,website,organization,rank_CCF,rank_CORE,rank_QUALIS,indexes,need_confirm) 
+                    value( %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'''
+        elif(spider.name == 'conference_all'):
+            sql = '''insert into t_conference_all(name,abbr,description,s_date,e_date,paper_date,noti_date,year,address,website,organization,rank_CCF,rank_CORE,rank_QUALIS,indexes,need_confirm) 
+                    value( %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'''
+
         value = (
             item.get('name', ''),
             item.get('abbr', ''),
@@ -39,6 +43,8 @@ class ConferencePipeline(object):
             item.get('rank_CCF', ''),
             item.get('rank_CORE', ''),
             item.get('rank_QUALIS', ''),
+            item.get('indexes', ''),
+            item.get('need_confirm', 0)
         )
         try:
             self.cursor.execute(sql, value)
@@ -47,7 +53,7 @@ class ConferencePipeline(object):
         except Exception as e:
             print("【DB ERROR】", str(e))
             self.conn.rollback()
-            spider.errorIndex()
+            spider.errorIndex(item.get('abbr', 'unknow'))
         return item
 
     # 关闭数据库

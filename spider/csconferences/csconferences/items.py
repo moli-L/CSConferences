@@ -23,3 +23,5 @@ class ConferenceItem(scrapy.Item):
     rank_CCF = scrapy.Field()
     rank_CORE = scrapy.Field()
     rank_QUALIS = scrapy.Field()
+    indexes = scrapy.Field()
+    need_confirm = scrapy.Field()
