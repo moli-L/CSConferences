@@ -98,192 +98,7 @@ export default {
     data() {
         return {
             textarea: "",
-            tableData: [
-                {
-                    id: 1,
-                    name:
-                        "International Conference on Networking and Information Technology",
-                    abbr: "ICNIT",
-                    description: "王小虎",
-                    s_date: "2019-11-10",
-                    e_date: "2019-10-10",
-                    paper_date: "2019-10-10",
-                    noti_date: "2019-10-10",
-                    year: "2019",
-                    address: "Hangzhou, China",
-                    website: "http://localhost:8080/manage",
-                    organization: "IEEE",
-                    rank_CCF: "a",
-                    rank_CORE: "a1",
-                    rank_QUALIS: "a1",
-                    indexes: "Ei,Scopus"
-                },
-                {
-                    id: 2,
-                    name: "IEEE Asia-Pacific Services Computing Conference",
-                    abbr: "APSCC",
-                    description: "王小虎",
-                    s_date: "2019-10-21",
-                    e_date: "2019-10-10",
-                    paper_date: "2019-10-10",
-                    noti_date: "2019-10-10",
-                    year: "2019",
-                    address: "Phuket, Thailand",
-                    website: "http://localhost:8080/manage",
-                    organization: "IEEE",
-                    rank_CCF: "a",
-                    rank_CORE: "a1",
-                    rank_QUALIS: "a1",
-                    indexes: "Ei,Scopus"
-                },
-                {
-                    id: 3,
-                    name:
-                        "International Conference on Computational Methods in Systems Biology",
-                    abbr: "CMSB",
-                    description: "王小虎",
-                    s_date: "2019-4-10",
-                    e_date: "2019-10-10",
-                    paper_date: "2019-10-10",
-                    noti_date: "2019-10-10",
-                    year: "2019",
-                    address: "Chicago, Illinois, USA",
-                    website: "http://localhost:8080/manage",
-                    organization: "ACM",
-                    rank_CCF: "a",
-                    rank_CORE: "a1",
-                    rank_QUALIS: "a1",
-                    indexes: "EI"
-                },
-                {
-                    id: 4,
-                    name:
-                        "International Conference on Scale Space and Variational Methods in Computer Vision",
-                    abbr: "SSVM",
-                    description: "王小虎",
-                    s_date: "2020-10-10",
-                    e_date: "2019-10-10",
-                    paper_date: "2019-10-10",
-                    noti_date: "2019-10-10",
-                    year: "2019",
-                    address: "Chicago, Illinois, USA",
-                    website: "http://localhost:8080/manage",
-                    organization: "ACM",
-                    rank_CCF: "a",
-                    rank_CORE: "a1",
-                    rank_QUALIS: "a1",
-                    indexes: "Ei,Scopus"
-                },
-                {
-                    id: 5,
-                    name:
-                        "IEEE Conference on Computer Vision and Pattern Recognition",
-                    abbr: "CVPR",
-                    description: "王小虎",
-                    s_date: "2018-5-10",
-                    e_date: "2019-10-10",
-                    paper_date: "2019-10-10",
-                    noti_date: "2019-10-10",
-                    year: "2019",
-                    address: "Chicago, Illinois, USA",
-                    website: "http://localhost:8080/manage",
-                    organization: "ACM",
-                    rank_CCF: "a",
-                    rank_CORE: "a1",
-                    rank_QUALIS: "a1",
-                    indexes: "Scopus"
-                },
-                {
-                    id: 6,
-                    name: "USENIX Conference on File and Storage Technologies",
-                    abbr: "FAST",
-                    description: "王小虎",
-                    s_date: "2019-10-5",
-                    e_date: "2019-10-10",
-                    paper_date: "2019-10-10",
-                    noti_date: "2019-10-10",
-                    year: "2019",
-                    address: "Chicago, Illinois, USA",
-                    website: "http://localhost:8080/manage",
-                    organization: "ACM",
-                    rank_CCF: "a",
-                    rank_CORE: "a1",
-                    rank_QUALIS: "a1",
-                    indexes: "Scopus"
-                },
-                {
-                    id: 7,
-                    name: "International Symposium on Physical Design",
-                    abbr: "ISPD",
-                    description: "王小虎",
-                    s_date: "2019-10-10",
-                    e_date: "2019-10-10",
-                    paper_date: "2019-10-10",
-                    noti_date: "2019-10-10",
-                    year: "2019",
-                    address: "Chicago, Illinois, USA",
-                    website: "http://localhost:8080/manage",
-                    organization: "ACM",
-                    rank_CCF: "a",
-                    rank_CORE: "a1",
-                    rank_QUALIS: "a1",
-                    indexes: "EI"
-                },
-                {
-                    id: 8,
-                    name: "International Symposium on Physical Design",
-                    abbr: "ISPD1",
-                    description: "王小虎",
-                    s_date: "2019-10-10",
-                    e_date: "2019-10-10",
-                    paper_date: "2019-10-10",
-                    noti_date: "2019-10-10",
-                    year: "2019",
-                    address: "Chicago, Illinois, USA",
-                    website: "http://localhost:8080/manage",
-                    organization: "ACM",
-                    rank_CCF: "a",
-                    rank_CORE: "a1",
-                    rank_QUALIS: "a1",
-                    indexes: "EI"
-                },
-                {
-                    id: 9,
-                    name: "International Symposium on Physical Design",
-                    abbr: "ISPD2",
-                    description: "王小虎",
-                    s_date: "2019-10-10",
-                    e_date: "2019-10-10",
-                    paper_date: "2019-10-10",
-                    noti_date: "2019-10-10",
-                    year: "2019",
-                    address: "Chicago, Illinois, USA",
-                    website: "http://localhost:8080/manage",
-                    organization: "ACM",
-                    rank_CCF: "a",
-                    rank_CORE: "a1",
-                    rank_QUALIS: "a1",
-                    indexes: "EI"
-                },
-                {
-                    id: 10,
-                    name: "International Symposium on Physical Design",
-                    abbr: "ISPD3",
-                    description: "王小虎",
-                    s_date: "2019-10-10",
-                    e_date: "2019-10-10",
-                    paper_date: "2019-10-10",
-                    noti_date: "2019-10-10",
-                    year: "2019",
-                    address: "Chicago, Illinois, USA",
-                    website: "http://localhost:8080/manage",
-                    organization: "ACM",
-                    rank_CCF: "a",
-                    rank_CORE: "a1",
-                    rank_QUALIS: "a1",
-                    indexes: "EI"
-                }
-            ],
+            tableData: [],
             labels: [
                 ["name", "会议全称"],
                 ["abbr", "简称"],
@@ -359,6 +174,15 @@ export default {
     &:first-child,
     &:nth-last-child(2) {
         width: 100%;
+    }
+    &.edit:first-child, &.edit:last-child {
+        width: 100%;
+        /deep/ .el-form-item__content {
+            width: 95%
+        }
+    }
+    &.edit:nth-last-child(2) {
+        width: 50%
     }
     /deep/ .el-form-item__content {
         width: 80%;
