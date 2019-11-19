@@ -11,13 +11,12 @@
                     </el-form-item>
                 </el-form>
                 <el-divider></el-divider>
-                <el-card>
+                <el-card shadow="never">
                     <el-table
                         ref="table"
                         :data="tableData"
                         stripe
                         style="width: 100%"
-                        max-height="800"
                     >
                         <el-table-column fixed type="index" width="40"></el-table-column>
                         <el-table-column fixed type="expand" width="80">
@@ -53,7 +52,7 @@
                         <!-- <el-table-column prop="rank_CORE" label="CORE" width="70"></el-table-column> -->
                         <!-- <el-table-column prop="rank_QUALIS" label="QUALIS" width="80"></el-table-column> -->
                         <!-- <el-table-column prop="indexes" label="可检索数据库" width="100"></el-table-column> -->
-                        <el-table-column fixed="right" label="操作" width="160">
+                        <el-table-column fixed="right" label="操作" width="150">
                             <template slot-scope="scope">
                                 <el-button
                                     @click.native.prevent="deleteRow(scope.$index, tableData)"
@@ -68,12 +67,35 @@
                             </template>
                         </el-table-column>
                     </el-table>
+                    <el-pagination
+                        @size-change="handleSizeChange"
+                        @current-change="handleCurrentChange"
+                        :hide-on-single-page="true"
+                        :current-page.sync="cur_page"
+                        :page-size="pageNum"
+                        :page-sizes="[10, 15, 20, 30]"
+                        layout="total, prev, pager, next, sizes"
+                        :total="totalNum"
+                        size="default"
+                    ></el-pagination>
                 </el-card>
             </el-col>
         </el-row>
 
-        <el-dialog title="修改信息" :visible.sync="dialogVisible" center :before-close="handleClose" width="70%">
-            <el-form :model="form_data" label-position="top" inline class="demo-table-expand" size="small">
+        <el-dialog
+            title="修改信息"
+            :visible.sync="dialogVisible"
+            center
+            :before-close="handleClose"
+            width="70%"
+        >
+            <el-form
+                :model="form_data"
+                label-position="top"
+                inline
+                class="demo-table-expand"
+                size="small"
+            >
                 <el-form-item
                     class="edit"
                     v-for="(label, index) in labels"
@@ -97,8 +119,12 @@ export default {
     name: "manage",
     data() {
         return {
-            textarea: "",
+            textarea: 'select * from t_conference_hb where rank_CCF = "a"',
+            total_data: [],
             tableData: [],
+            cur_page: 1,
+            pageNum: 10,
+            totalNum: 0,
             labels: [
                 ["name", "会议全称"],
                 ["abbr", "简称"],
@@ -123,15 +149,16 @@ export default {
     },
     methods: {
         onSubmit() {
-            console.log(this.textarea);
-            this.$axios.post('/api/sql', {sql: this.textarea})
+            this.$axios
+                .post("/api/sql", { sql: this.textarea })
                 .then(res => {
-                    console.log(res.data.data);
-                    
-                    this.tableData = res.data.data
-                }).catch(err => {
-                    console.log(err);
+                    this.total_data = res.data.data;
+                    this.totalNum = this.total_data.length;
+                    this.tableData = this.total_data.slice(0, this.pageNum);
                 })
+                .catch(err => {
+                    console.log(err);
+                });
         },
         deleteRow(index, rows) {
             rows.splice(index, 1);
@@ -141,7 +168,7 @@ export default {
             this.dialogVisible = true;
         },
         foldRow(row) {
-            this.$refs.table.toggleRowExpansion(row, false)
+            this.$refs.table.toggleRowExpansion(row, false);
         },
         handleClose() {
             this.form_data = [];
@@ -149,7 +176,20 @@ export default {
         },
         handleConfirm() {
             this.dialogVisible = false;
+        },
+        handleSizeChange(val) {
+            this.pageNum = val;
+            this.handleCurrentChange(this.cur_page);
+        },
+        handleCurrentChange(val) {
+            this.tableData = this.total_data.slice(
+                this.pageNum * (val - 1),
+                this.pageNum * val
+            );
         }
+    },
+    beforeMount() {
+        this.onSubmit();
     }
 };
 </script>
@@ -161,6 +201,7 @@ export default {
         text-align: start;
     }
 }
+
 .demo-table-expand {
     font-size: 0;
     padding: 20px;
@@ -175,14 +216,15 @@ export default {
     &:nth-last-child(2) {
         width: 100%;
     }
-    &.edit:first-child, &.edit:last-child {
+    &.edit:first-child,
+    &.edit:last-child {
         width: 100%;
         /deep/ .el-form-item__content {
-            width: 95%
+            width: 95%;
         }
     }
     &.edit:nth-last-child(2) {
-        width: 50%
+        width: 50%;
     }
     /deep/ .el-form-item__content {
         width: 80%;
@@ -194,18 +236,15 @@ export default {
         padding: 10px 0 0 0;
     }
 }
-
 .fold {
     color: #409eff;
     font-size: 14px;
     float: right;
     cursor: pointer;
 }
-
 /deep/ .el-form label {
     color: #99a9bf;
 }
-
 /deep/ .el-table__expand-icon::after {
     content: "查看更多";
     color: #409eff;
@@ -214,12 +253,15 @@ export default {
 /deep/ .el-table__expand-icon > i {
     display: none !important;
 }
-
 /deep/ .el-table__expand-icon--expanded {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
     &::after {
         content: "收起面板";
     }
+}
+
+.el-pagination {
+    margin-top: 15px;
 }
 </style>
